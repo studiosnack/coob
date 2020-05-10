@@ -1,39 +1,56 @@
 import * as React from "react";
-import { Text, View, ViewStyle, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  ViewStyle,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import Constants from "expo-constants";
 import range from "lodash/range";
 
-import {GridView} from './components/grid'
-import {Color} from './utils/colors'
+import { GridView } from "./components/grid";
+import {
+  AppProvider,
+  useSelector,
+  useDispatch,
+  getState,
+} from "./hooks/useApp";
 
-import {randomGrid} from './utils/coob'
+import { Grid, randomGrid } from "./utils/coob";
 
 const ROWS = 4;
 const COLS = 4;
 
 const gameGrid = randomGrid(ROWS, COLS);
 
-
-const colorMap = {
-  blue: "#0074D9",
-  red: "#FF4136",
-  green: "#2ECC40",
-  yellow: "#FFDC00",
-};
-
-
-export default function App() {
-  const [grid, setGrid] = React.useState(gameGrid);
-
+export default function AppShell() {
   return (
-    <View style={styles.container}>
-      <GridView grid={grid} />
-    </View>
+    <AppProvider>
+      <View style={styles.container}>
+        <App />
+      </View>
+    </AppProvider>
   );
 }
 
+let renderGrid = (grid: Grid) => {
+  let height = Math.max(...grid.map((col) => col.length));
+  let out = `-=-=-=-=-=-=-=-=-=\n`;
+  for(let i=0; i < height; i += 1) {
+    out += `${grid.map(col => col[i].color).join(' ')}\n`
+  }
+  out += `-=-=-=-=-=-=-=-=-=\n`;
+  console.log(out)
+};
 
-const styles: {[k: string]: ViewStyle} = StyleSheet.create({
+const App = () => {
+  const grid = useSelector((state) => state.grid);
+  // renderGrid(grid);
+  return <GridView grid={grid} />;
+};
+
+const styles: { [k: string]: ViewStyle } = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
@@ -42,4 +59,3 @@ const styles: {[k: string]: ViewStyle} = StyleSheet.create({
     padding: 8,
   },
 });
-

@@ -12,6 +12,7 @@ import {Color} from '../utils/colors'
 import {breakable, getBlockColor} from '../utils/grid'
 
 import {blocksByColor} from './grid.styles';
+import { useDispatch } from '../hooks/useApp';
 // a grid is basically left to right and then bottom to top
 // going bottom to top makes it easy to splice a bunch of blocks from 'the bottom'
 const Tile = ({
@@ -19,33 +20,37 @@ const Tile = ({
   x,
   y,
   grid,
+  onTap
 }: {
   color: Color;
   x: number;
   y: number;
   grid: Grid;
-}) => (
-  <TouchableOpacity
-    onPress={() => {
-      breakable(grid, x, y);
-    }}
-  >
-    <View style={blocksByColor[color]} />
-  </TouchableOpacity>
-);
+  onTap: (x: number, y: number) => any;
+}) => {
+        return (<TouchableOpacity onPress={() => {
+            breakable(grid, x, y);
+            onTap(x, y);
+        } }>
+            <View style={blocksByColor[color]} />
+        </TouchableOpacity>);
+    };
 
 export const GridView = ({ grid }: { grid: Grid }) => {
+    let dispatch = useDispatch();
+    let handleTap = (x: number,y: number) => dispatch({type: 'tap', payload: {x, y}})
   return (
     <View style={{ flexDirection: "row" }}>
       {grid.map((column, rowIdx) => (
         <View key={rowIdx} style={{ flexDirection: "column", margin: 2 }}>
           {column.map((cube, colIdx) => (
             <Tile
-              key={`${rowIdx}${colIdx}`}
+              key={cube.id}
               color={getBlockColor(cube)}
               grid={grid}
               x={rowIdx}
               y={colIdx}
+              onTap={() => handleTap(rowIdx, colIdx)}
             />
           ))}
         </View>

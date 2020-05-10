@@ -1,13 +1,14 @@
 import React, { Reducer } from "react";
-import { Grid } from "../utils/coob";
-import {produce} from 'immer';
+import { Grid, randomGrid, randomColumn } from "../utils/coob";
+import produce from "immer";
+import { breakable } from "../utils/grid";
 
 type AppState = { grid: Grid; rows: number; cols: number };
 type InitPayload = { rows: number; cols: number };
 type AppActions =
   | { type: "init"; payload: InitPayload }
   | { type: "tap"; payload: { x: number; y: number } }
-  | {type: 'removeSet'; payload: string[]};
+  | { type: "removeSet"; payload: string[] };
 type AppReducer = (state: AppState, action: AppActions) => AppState;
 
 const appReducer = (state: AppState, action: AppActions): AppState => {
@@ -15,19 +16,37 @@ const appReducer = (state: AppState, action: AppActions): AppState => {
     case "init":
       return initState(action.payload);
     case "tap":
+      let { x, y } = action.payload;
+      let nullable = breakable(state.grid, x, y);
+      if (nullable.length > 1) {
+        let nextGrid = produce(state.grid, (draft) => {
+          nullable.forEach((point) => {
+            let [px, py] = point.split(',').map(Number)
+            draft[px][py].state = 'broken';
+          });
+          for (let i = 0; i < draft.length; i += 1){
+            let col = draft[i]
+            let filtered = col.filter((block) => block.state !== "broken");
+            let newRowCount = state.rows - filtered.length;
+            let extras = randomColumn(newRowCount);
+
+            draft[i] = [...extras, ...filtered];
+          }
+        });
+        // console.log(nextGrid)
+        return {...state, grid: nextGrid}
+      }
       return state;
     case "removeSet":
       return state;
   }
   return state;
 };
-const initState = ({
+const initState = ({ cols, rows }: InitPayload): AppState => ({
+  grid: randomGrid(rows, cols),
   rows,
   cols,
-}: {
-  rows: number;
-  cols: number;
-}): AppState => ({ grid: [], rows, cols });
+});
 const initial = { rows: 4, cols: 4 };
 const initialState = initState(initial);
 
@@ -53,7 +72,8 @@ export const getState = (): AppState => {
 
 export function useSelector<T>(selector: (state: AppState) => T): T {
   let state = getState();
-  return React.useMemo(() => selector(state), [state, selector]);
+  return selector(state);
+  // return React.useMemo(() => selector(state), [state, selector]);
 }
 
 export const AppProvider = ({
@@ -61,15 +81,11 @@ export const AppProvider = ({
   initialValue = initial,
   children,
 }: {
-  initialValue: InitPayload;
-  reducer: AppReducer;
-  children: React.ReactNode;
+  initialValue?: InitPayload;
+  reducer?: AppReducer;
+  children?: React.ReactNode;
 }) => {
-  const appContextReducer = React.useReducer(
-    reducer,
-    initialValue,
-    initState
-  );
+  const appContextReducer = React.useReducer(reducer, initialValue, initState);
   return (
     <AppContext.Provider value={appContextReducer}>
       {children}

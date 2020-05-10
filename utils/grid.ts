@@ -1,6 +1,7 @@
 import {Block, Grid} from './coob'
 import {Color} from './colors'
 
+
 export const getBlockColor = (block: Block) => block.color;
 
 export const gridSiblings = (grid: Grid, x: number, y: number): string[] => {
@@ -26,7 +27,6 @@ export const matchesColor = (color: Color, grid: Grid) => (point: string | null)
 export const breakable = (grid: Grid, posX: number, posY: number) => {
   let points: Set<string> = new Set();
   points.add(`${posX},${posY}`);
-  console.log("points", points);
 
   let pointColor = grid[posX][posY];
   let siblings = gridSiblings(grid, posX, posY);
@@ -39,8 +39,6 @@ export const breakable = (grid: Grid, posX: number, posY: number) => {
   let shouldLoop = true;
   let pointSize = points.size;
   while (shouldLoop) {
-    console.log("loopin");
-    console.log(`points(${points.size}).values`, points.values());
     Array.from(points).map((pt) => {
       let [x, y] = pt.split(",").map(Number);
       let newSibs = gridSiblings(grid, x, y).filter(
@@ -52,6 +50,5 @@ export const breakable = (grid: Grid, posX: number, posY: number) => {
     shouldLoop = pointSize !== points.size;
     pointSize = points.size;
   }
-  console.log(`matched`, Array.from(points));
   return Array.from(points);
 };
