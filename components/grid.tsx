@@ -11,7 +11,7 @@ import { Grid } from "../utils/coob";
 import {Color} from '../utils/colors'
 import {breakable, getBlockColor} from '../utils/grid'
 
-import {blocksByColor} from '../styles';
+import {blocksByColor} from './grid.styles';
 // a grid is basically left to right and then bottom to top
 // going bottom to top makes it easy to splice a bunch of blocks from 'the bottom'
 const Tile = ({

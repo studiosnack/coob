@@ -41,14 +41,5 @@ const styles: {[k: string]: ViewStyle} = StyleSheet.create({
     backgroundColor: "#efefef",
     padding: 8,
   },
-  block: {
-    width: 30,
-    height: 30,
-    borderRadius: 4,
-    margin: 4,
-    flex: 1,
-    flexGrow: 1,
-    flexBasis: 30,
-  },
 });
 
