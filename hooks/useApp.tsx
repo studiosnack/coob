@@ -7,6 +7,7 @@ type AppState = { grid: Grid; rows: number; cols: number };
 type InitPayload = { rows: number; cols: number };
 type AppActions =
   | { type: "init"; payload: InitPayload }
+  | { type: "reset" }
   | { type: "tap"; payload: { x: number; y: number } }
   | { type: "removeSet"; payload: string[] };
 type AppReducer = (state: AppState, action: AppActions) => AppState;
@@ -15,6 +16,8 @@ const appReducer = (state: AppState, action: AppActions): AppState => {
   switch (action.type) {
     case "init":
       return initState(action.payload);
+    case "reset":
+      return initState({rows: state.rows, cols: state.cols});
     case "tap":
       let { x, y } = action.payload;
       let nullable = breakable(state.grid, x, y);
@@ -47,7 +50,7 @@ const initState = ({ cols, rows }: InitPayload): AppState => ({
   rows,
   cols,
 });
-const initial = { rows: 4, cols: 4 };
+const initial = { rows: 6, cols: 6 };
 const initialState = initState(initial);
 
 const AppContext = React.createContext<

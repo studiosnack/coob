@@ -19,8 +19,8 @@ import {
 
 import { Grid, randomGrid } from "./utils/coob";
 
-const ROWS = 4;
-const COLS = 4;
+const ROWS = 6;
+const COLS = 6;
 
 const gameGrid = randomGrid(ROWS, COLS);
 
@@ -37,17 +37,43 @@ export default function AppShell() {
 let renderGrid = (grid: Grid) => {
   let height = Math.max(...grid.map((col) => col.length));
   let out = `-=-=-=-=-=-=-=-=-=\n`;
-  for(let i=0; i < height; i += 1) {
-    out += `${grid.map(col => col[i].color).join(' ')}\n`
+  for (let i = 0; i < height; i += 1) {
+    out += `${grid.map((col) => col[i].color).join(" ")}\n`;
   }
   out += `-=-=-=-=-=-=-=-=-=\n`;
-  console.log(out)
+  console.log(out);
 };
 
 const App = () => {
   const grid = useSelector((state) => state.grid);
-  // renderGrid(grid);
-  return <GridView grid={grid} />;
+  let dispatch = useDispatch();
+  return (
+    <React.Fragment>
+      <GridView grid={grid} />
+      
+      <TouchableOpacity
+        onPress={() => {
+          dispatch({ type: "reset" });
+        }}
+      >
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "column",
+            // justifyContent: "flex-end",
+            backgroundColor: "#85144b",
+            width: 100,
+            height: 20,
+            borderRadius: 4,
+            padding: 10,
+            marginTop:60,
+          }}
+        >
+          <Text style={{ color: "white" }}>reset</Text>
+        </View>
+      </TouchableOpacity>
+    </React.Fragment>
+  );
 };
 
 const styles: { [k: string]: ViewStyle } = StyleSheet.create({

@@ -2,13 +2,13 @@ import {StyleSheet, ViewStyle} from 'react-native'
 import {Color} from '../utils/colors'
 
 const blockStyle = {
-  width: 30,
-  height: 30,
+  width: 40,
+  height: 40,
   borderRadius: 4,
   margin: 4,
   flex: 1,
   flexGrow: 1,
-  flexBasis: 30,
+  flexBasis: 40,
 };
 
 export const blocksByColor: { [k in Color]: ViewStyle } = StyleSheet.create({
