@@ -23,6 +23,8 @@
     ],
     "ios": {
       "supportsTablet": true
-    }
+    },
+    "description": "i'm sorry, i'm not sure why you're looking at this",
+    "githubUrl": "https://github.com/studiosnack/coob"
   }
 }

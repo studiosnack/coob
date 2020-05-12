@@ -3,13 +3,14 @@ import { Grid, randomGrid, randomColumn } from "../utils/coob";
 import produce from "immer";
 import { breakable } from "../utils/grid";
 
-type AppState = { grid: Grid; rows: number; cols: number };
+type AppState = { grid: Grid; rows: number; cols: number, config: {[k: string]: boolean | string | number} };
 type InitPayload = { rows: number; cols: number };
 type AppActions =
   | { type: "init"; payload: InitPayload }
   | { type: "reset" }
   | { type: "tap"; payload: { x: number; y: number } }
-  | { type: "removeSet"; payload: string[] };
+  | { type: "removeSet"; payload: string[] }
+  | {type: "setConfig", payload: {key: string, value: string | boolean | number}};
 type AppReducer = (state: AppState, action: AppActions) => AppState;
 
 const appReducer = (state: AppState, action: AppActions): AppState => {
@@ -18,6 +19,10 @@ const appReducer = (state: AppState, action: AppActions): AppState => {
       return initState(action.payload);
     case "reset":
       return initState({rows: state.rows, cols: state.cols});
+    case "setConfig":
+      return produce(state, draft => {
+        draft.config[action.payload.key] = action.payload.value
+      })
     case "tap":
       let { x, y } = action.payload;
       let nullable = breakable(state.grid, x, y);
@@ -49,6 +54,7 @@ const initState = ({ cols, rows }: InitPayload): AppState => ({
   grid: randomGrid(rows, cols),
   rows,
   cols,
+  config: {},
 });
 const initial = { rows: 6, cols: 6 };
 const initialState = initState(initial);
