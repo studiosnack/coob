@@ -10,9 +10,10 @@ import {
 } from "react-native";
 import Constants from "expo-constants";
 import range from "lodash/range";
+
 import BlastCubeImage from "./assets/blastcube.png";
 
-import { GridView } from "./components/grid";
+import { GridView, PositionedGridView } from "./components/grid";
 import {
   AppProvider,
   useSelector,
@@ -69,7 +70,7 @@ const App = () => {
 
   return (
     <React.Fragment>
-      {dangerModeEnabled ? null : <GridView grid={grid} />}
+      {dangerModeEnabled ? <PositionedGridView grid={grid} /> : <GridView grid={grid} />}
 
       <View style={{ flexDirection: "row", marginTop: 60 }}>
         <TouchableOpacity
