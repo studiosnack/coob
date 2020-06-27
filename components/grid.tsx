@@ -92,6 +92,7 @@ export const PositionedGridView = ({ grid }: { grid: Grid }) => {
               yp={yp}
               x={colIdx}
               y={rowIdx}
+              grid={grid}
               cube={cube}
               onTap={() => {
                 handleTap(colIdx, rowIdx);
