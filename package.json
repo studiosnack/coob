@@ -10,7 +10,7 @@
   "dependencies": {
     "expo": "^38.0.0",
     "expo-cli": "^3.20.3",
-    "immer": "^6.0.5",
+    "immer": "^9.0.6",
     "lodash": "^4.17.15",
     "react": "16.11.0",
     "react-dom": "16.11.0",
